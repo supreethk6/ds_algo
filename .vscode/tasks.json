@@ -1,0 +1,28 @@
+{
+  "tasks": [
+      {
+          "type": "cppbuild",
+          "label": "Totally custom debug task name",
+          "command": "/usr/bin/g++",
+          "args": [
+              "-std=c++17",
+              "-g",
+              "${file}",
+              "-o",
+              "${fileDirname}/pgm_output"
+          ],
+          "options": {
+              "cwd": "/usr/bin"
+          },
+          "problemMatcher": [
+              "$gcc"
+          ],
+          "group": {
+              "kind": "build",
+              "isDefault": true
+          },
+          "detail": "Generated task by Debugger"
+      }
+  ],
+  "version": "2.0.0"
+}
