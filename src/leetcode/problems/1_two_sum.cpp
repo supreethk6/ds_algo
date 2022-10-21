@@ -34,6 +34,13 @@
  * 
  */
 
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+
+using std::unordered_map;
+using std::vector;
+
 class Solution {
 public:
   vector<int> twoSum(vector<int>& nums, int target) {
@@ -52,3 +59,7 @@ public:
     return {0};
   }
 };
+
+int main() {
+  return 0;
+}
