@@ -42,11 +42,14 @@
 #include <iostream>
 #include <stack>
 #include <queue>
+#include <memory>
 
 using std::cout;
 using std::endl;
 using std::stack;
 using std::queue;
+using std::unique_ptr;
+using std::make_unique;
 
 // This is an input class. Do not edit.
 class BinaryTree {
@@ -88,6 +91,7 @@ void depthFirstSearch(BinaryTree* root) {
  * 
  * @param root root value of the tree
  *
+ */
 void breadthFirstSearch(BinaryTree* root) {
   queue<BinaryTree*> nodes;
   nodes.push(root);
@@ -106,69 +110,62 @@ void breadthFirstSearch(BinaryTree* root) {
     }
   }
 }
-*/
+
+// void deleteTree(BinaryTree* root) {
+//   if (root == nullptr) return;
+//   deleteTree(root->left);
+//   deleteTree(root->right);
+//   delete root;
+// }
 
 BinaryTree* mergeBinaryTrees(BinaryTree* tree1, BinaryTree* tree2) {
-  // Write your code here.
-  BinaryTree* mergeOutput;
-  // depthFirstSearch(tree1);
-  // cout << endl;
-  // breadthFirstSearch(tree1);
-  // cout << endl;
-  // breadthFirstSearch(tree2);
-  // cout << endl;
+  if (tree1 == nullptr) return tree2;
+  if (tree2 == nullptr) return tree1;
 
-  queue<BinaryTree*> nodes1;
-  nodes1.push(tree1);
+  queue<BinaryTree*> q1, q2, resultQueue;
+  q1.push(tree1);
+  q2.push(tree2);
 
-  queue<BinaryTree*> nodes2;
-  nodes2.push(tree2);
+  BinaryTree* root = new BinaryTree(tree1->value + tree2->value);
+  resultQueue.push(root);
 
-  while (!nodes1.empty() && !nodes2.empty()) {
-    cout << " - " << !nodes1.empty() << " && " << !nodes2.empty() << " - " ;
-    BinaryTree* current1 = nodes1.front();
-    nodes1.pop();
-    BinaryTree* current2 = nodes2.front();
-    nodes2.pop();
+  while (!q1.empty() && !q2.empty()) {
+    BinaryTree* t1 = q1.front();
+    q1.pop();
+    BinaryTree* t2 = q2.front();
+    q2.pop();
 
-    BinaryTree resultTree(current1->value + current2->value);
-    cout << resultTree.value << " + "; 
+    BinaryTree* resultTree = resultQueue.front();
+    resultQueue.pop();
 
-    cout << current1->value << " ";
-
-    if (current1->left != nullptr && current2->left != nullptr) {
-      nodes1.push(current1->left);
-      nodes2.push(current2->left);
-      resultTree.left = new BinaryTree(current1->left->value + current2->left->value);
+    if (t1->left && t2->left) {
+      resultTree->left = new BinaryTree(t1->left->value + t2->left->value);
+      q1.push(t1->left);
+      q2.push(t2->left);
+      resultQueue.push(resultTree->left);
     }
-    else if (current1->left != nullptr && current2->left == nullptr) {
-      nodes1.push(current1->left);
-      resultTree.left = new BinaryTree(current1->left->value);
+    else if (t1->left && !t2->left) {
+      resultTree->left = t1->left;
     }
-    else if (current1->left == nullptr && current2->left != nullptr) {
-      nodes2.push(current2->left);
-      resultTree.left = new BinaryTree(current2->left->value);
+    else if (!t1->left && t2->left) {
+      resultTree->left = t2->left;
     }
 
-    if (current1->right != nullptr && current2->right != nullptr) {
-      nodes1.push(current1->right);
-      nodes2.push(current2->right);
-      resultTree.right = new BinaryTree(current1->right->value + current2->right->value);
+    if (t1->right && t2->right) {
+      resultTree->right = new BinaryTree(t1->right->value + t2->right->value);
+      q1.push(t1->right);
+      q2.push(t2->right);
+      resultQueue.push(resultTree->right);
     }
-    else if (current1->right != nullptr && current2->right == nullptr) {
-      nodes1.push(current1->right);
-      resultTree.right = new BinaryTree(current1->right->value);
+    else if (t1->right && !t2->right) {
+      resultTree->right = t1->right;
     }
-    else if (current1->right == nullptr && current2->right != nullptr) {
-      nodes2.push(current2->right);
-      resultTree.right = new BinaryTree(current2->right->value);
+    else if (!t1->right && t2->right) {
+      resultTree->right = t2->right;
     }
   }
 
-  cout << " - " << !nodes1.empty() << " && " << !nodes2.empty() << " - " ;
-  // cout << nodes2.front()->value << endl;
-
-  return mergeOutput;
+  return root;
 }
 
 int main() {
@@ -177,6 +174,8 @@ int main() {
   tree1.right = new BinaryTree(2);
   tree1.left->left = new BinaryTree(7);
   tree1.left->right = new BinaryTree(4);
+  breadthFirstSearch(&tree1);
+  cout << endl;
 
   BinaryTree tree2(1);
   tree2.left = new BinaryTree(5);
@@ -184,8 +183,16 @@ int main() {
   tree2.left->left = new BinaryTree(2);
   tree2.right->left = new BinaryTree(7);
   tree2.right->right = new BinaryTree(6);
+  breadthFirstSearch(&tree2);
+  cout << endl;
 
   BinaryTree* mergeResult =  mergeBinaryTrees(&tree1, &tree2);
+  breadthFirstSearch(mergeResult);
+  cout << endl;
+
+  // deleteTree(&tree1);
+  // deleteTree(&tree2);
+  // deleteTree(mergeResult);
 
   return 0;
 }
