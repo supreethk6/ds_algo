@@ -48,3 +48,32 @@
  * 
  */
 
+#include <iostream>
+#include <vector>
+
+using std::cout;
+using std::endl;
+using std::vector;
+
+int pivotIndex(vector<int> & nums) {
+  int left_sum = 0, total_sum = 0;
+  for (int num : nums) 
+    total_sum += num;
+  for (int i = 0; i < nums.size(); ++i) {
+    if (left_sum == total_sum - nums[i] - left_sum) 
+      return i;
+    left_sum += nums[i];
+  }
+
+  return -1;
+}
+
+int main() {
+  vector<int> nums {1, 7, 3, 6, 5, 6};
+  // vector<int> nums {1, 2, 3};
+  // vector<int> nums {2, 1, -1};
+  int pivot_index = pivotIndex(nums);
+  cout << pivot_index << endl;
+
+  return 0;
+}

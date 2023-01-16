@@ -65,8 +65,8 @@ void printVector(vector<T> &vec) {
 vector<int> runningSum(vector<int> &nums) {
   vector<int> result {};
   result.push_back(nums[0]);
-  for (int num = 1; num < size(nums); num++) {
-    result.push_back(nums[num] + result[num-1]);
+  for (int num = 1; num < nums.size(); ++num) {
+    result.push_back(nums[num] + result.back());
   }
 
   return result;
